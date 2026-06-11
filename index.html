@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"><title>🏸 羽毛球对战编排</title>
+<style>*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}body{background:#f5f7fa;padding:12px;max-width:800px;margin:0 auto;color:#333}h1{text-align:center;color:#1a1a2e;font-size:1.5rem;margin-bottom:4px}.subtitle{text-align:center;color:#666;font-size:.85rem;margin-bottom:12px}.card{background:#fff;border-radius:10px;padding:12px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.06);border:1px solid #eee}.tab-row{display:flex;justify-content:center;gap:8px;margin-bottom:12px}.tab{padding:8px 16px;border-radius:20px;border:2px solid #ddd;background:#fff;font-size:.9rem;cursor:pointer}.tab.active{border-color:#667eea;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;font-weight:600}.rules{font-size:.78rem;color:#555;line-height:1.6}.ig{display:grid;grid-template-columns:28px 1fr 60px;gap:4px;margin-bottom:4px;align-items:center}.ig span{font-size:.8rem;color:#999;text-align:center}.ig input{padding:6px 8px;border:1px solid #ddd;border-radius:6px;font-size:.85rem;outline:none}.ig input:focus{border-color:#667eea}.btn{padding:6px 12px;border:none;border-radius:6px;cursor:pointer;font-size:.8rem;font-weight:500}.ba{background:#4CAF50;color:#fff}.bd{background:#ff5252;color:#fff}.br{background:#2d8cf0;color:#fff}.bg{padding:10px 24px;border-radius:8px;border:none;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;font-weight:600;font-size:1rem;cursor:pointer;display:block;margin:12px auto}.brow{display:flex;gap:6px;margin:8px 0;flex-wrap:wrap}.mc{background:#fff;border-radius:8px;padding:10px;margin:6px 0;border:1px solid #eee}.mh{display:flex;justify-content:space-between;margin-bottom:4px}.rl{font-weight:700;font-size:.9rem}.db{font-size:.7rem;padding:2px 6px;border-radius:10px}.d0{background:#d4edda;color:#155724}.d1{background:#fff3cd;color:#856404}.d2{background:#ffeeba;color:#856404}.dx{background:#f8d7da;color:#721c24}.vs{text-align:center;font-weight:700;color:#ff6b6b;margin:2px 0;font-size:.85rem}.tr{text-align:center;font-size:.88rem}.ss{margin-top:16px;background:#f8f9fa;border-radius:10px;padding:10px;overflow-x:auto}.ss table{width:100%;border-collapse:collapse;font-size:.72rem}.ss th{background:#e8f3ff;padding:5px 3px;border:1px solid #ddd;white-space:nowrap;font-weight:600}.ss td{padding:4px 3px;border:1px solid #eee;text-align:center;white-space:nowrap}.ss td.dt{white-space:normal;text-align:left;font-size:.68rem;max-width:160px;word-break:break-all}.hint{font-size:.72rem;color:#aaa;margin-top:4px}.trow{display:flex;gap:8px;flex-wrap:wrap}.tba{flex:1 1 280px;background:#f0f4ff;border-radius:10px;padding:10px;border:1px solid #d0d8f0}.tbb{flex:1 1 280px;background:#fff0f0;border-radius:10px;padding:10px;border:1px solid #f0d0d0}.tbm{background:#f0fff4;border-radius:10px;padding:10px;border:1px solid #c3e6cb}.st{font-size:1rem;font-weight:600;margin-bottom:6px;color:#1a1a2e}.hidden{display:none}.cr{display:flex;gap:8px;align-items:center;margin:10px 0;flex-wrap:wrap}.ri{padding:6px;border-radius:6px;border:1px solid #ddd;width:70px;font-size:.9rem}</style></head><body>
+<h1>🏸 羽毛球对战编排</h1><p class="subtitle">智能排阵，公平对战（单机版）</p>
+<div class="tab-row"><button class="tab active" id="t1" onclick="sw('team')">⚔️ 双队对战</button><button class="tab" id="t2" onclick="sw('mixed')">🔀 单组混战</button></div>
+<div class="card"><div class="rules" id="rul"></div></div>
+<div id="tp"><div class="trow"><div class="tba"><div class="st">🔵 A队选手</div><div id="sA"></div><div class="brow"><button class="btn ba" onclick="ar('A')">+ 加一行</button><button class="btn bd" onclick="dr('A')">- 减一行</button><button class="btn br" onclick="fr('A')">🎲 随机</button></div><div class="hint">排名越小越强；留空跳过</div></div><div class="tbb"><div class="st">🔴 B队选手</div><div id="sB"></div><div class="brow"><button class="btn ba" onclick="ar('B')">+ 加一行</button><button class="btn bd" onclick="dr('B')">- 减一行</button><button class="btn br" onclick="fr('B')">🎲 随机</button></div><div class="hint">排名越小越强；留空跳过</div></div></div></div>
+<div id="mp" class="hidden"><div class="tbm"><div class="st">🏸 全体选手</div><div id="sAll"></div><div class="brow"><button class="btn ba" onclick="ar('All')">+ 加一行</button><button class="btn bd" onclick="dr('All')">- 减一行</button><button class="btn br" onclick="fr('All')">🎲 随机</button></div><div class="hint">排名越小越强；留空跳过</div></div></div>
+<div class="cr"><span style="font-size:.9rem">比赛场数:</span><input class="ri" type="number" id="rds" value="45" min="1"></div>
+<button class="bg" onclick="gen()">🎯 生成对阵表</button>
+<div id="mr"></div><div id="st"></div>
+<script>
+var M='team',SN='赵钱孙李周吴郑王冯陈褚卫蒋沈韩杨朱秦尤许何吕施张孔曹严华金魏陶姜',GN='伟芳敏静丽强磊洋勇艳杰娟涛超明霞秀桂英华慧建国平刚辉鑫鹏飞翔宇',MD=2;
+function sw(m){M=m;document.getElementById('t1').className='tab'+(m==='team'?' active':'');document.getElementById('t2').className='tab'+(m==='mixed'?' active':'');document.getElementById('tp').className=m==='team'?'':'hidden';document.getElementById('mp').className=m==='mixed'?'':'hidden';ur();}
+function ur(){document.getElementById('rul').innerHTML=M==='team'?'<b>双队对战：</b>实力差≤2 | 出场差≤1 | 禁连打 | 搭档全覆盖 | 对手均衡':'<b>单组混战：</b>实力差≤2 | 出场差≤1 | 禁连打 | 搭档全覆盖 | 对手均衡';}
+function sh(i){return '<div class="ig"><span>'+i+'</span><input placeholder="选手'+i+'"><input type="number" placeholder="排名" min="1"></div>';}
+function is(id,n){var c=document.getElementById(id);c.innerHTML='';for(var i=1;i<=n;i++)c.innerHTML+=sh(i);}
+function ar(t){var c=document.getElementById('s'+t),n=c.children.length+1;c.innerHTML+=sh(n);}
+function dr(t){var c=document.getElementById('s'+t);if(c.children.length>1)c.removeChild(c.lastChild);}
+function rn(u){for(var i=0;i<100;i++){var s=SN[Math.floor(Math.random()*SN.length)]+GN[Math.floor(Math.random()*GN.length)]+(Math.random()>.5?GN[Math.floor(Math.random()*GN.length)]:'');if(!u.has(s)){u.add(s);return s;}}return'P'+Math.floor(Math.random()*999);}
+function fr(t){var c=document.getElementById('s'+t),rows=c.children,u=new Set();for(var i=0;i<rows.length;i++){var inp=rows[i].querySelectorAll('input');inp[0].value=rn(u);inp[1].value=String(i+1);}}
+function pp(t){var c=document.getElementById('s'+t),rows=c.children,l=[];for(var i=0;i<rows.length;i++){var inp=rows[i].querySelectorAll('input');var nm=inp[0].value.trim(),sc=parseInt(inp[1].value);if(nm&&!isNaN(sc)&&sc>=1)l.push({name:nm,score:sc,play:0,maxPlay:0,partners:new Set(),opponents:new Set()});}return l.sort(function(a,b){return a.score-b.score;});}
+function gk(a,b){return a<b?a+'|'+b:b+'|'+a;}
+function cq(t,tot){var n=t.length;if(!n)return;var b=Math.floor(tot/n),e=tot%n;t.forEach(function(p){p.play=0;p.maxPlay=b;});var s=[].concat(t).sort(function(){return Math.random()-.5;});for(var i=0;i<e;i++)s[i].maxPlay++;}
+function gen(){var r=parseInt(document.getElementById('rds').value)||45;if(M==='team')gt(r);else gm(r);}
+function gt(R){var tA=pp('A'),tB=pp('B');if(tA.length<2||tB.length<2){alert('每队至少2人');return;}cq(tA,R*2);cq(tB,R*2);var fR=new Map(),pR=new Map(),lR=new Set(),ms=[];
+for(var r=0;r<R*3&&ms.length<R;r++){var uA=tA.filter(function(p){return p.play<p.maxPlay;}),uB=tB.filter(function(p){return p.play<p.maxPlay;});if(uA.length<2||uB.length<2)break;
+var mA=Math.min.apply(null,uA.map(function(p){return p.play;})),mB=Math.min.apply(null,uB.map(function(p){return p.play;}));
+var bst=null,bs=1/0;
+for(var ex=1;ex<=3&&!bst;ex++){var pA=uA.filter(function(p){return p.play<=mA+ex;}),pB=uB.filter(function(p){return p.play<=mB+ex;});
+if(ex===1){var nA=pA.filter(function(p){return!lR.has(p.name);}),nB=pB.filter(function(p){return!lR.has(p.name);});if(nA.length>=2)pA=nA;if(nB.length>=2)pB=nB;}
+var uPA=tA.some(function(p){return tA.some(function(o){return o.name!==p.name&&!(pR.get(gk(p.name,o.name))||0);});});
+var uPB=tB.some(function(p){return tB.some(function(o){return o.name!==p.name&&!(pR.get(gk(p.name,o.name))||0);});});
+for(var ai=0;ai<pA.length;ai++)for(var aj=ai+1;aj<pA.length;aj++){var aP=[pA[ai],pA[aj]],aS=aP[0].score+aP[1].score;
+for(var bi=0;bi<pB.length;bi++)for(var bj=bi+1;bj<pB.length;bj++){var bP=[pB[bi],pB[bj]],bS=bP[0].score+bP[1].score;if(Math.abs(aS-bS)>MD)continue;
+var sc=sm(aP,bP,fR,pR,tA,tB,uPA,uPB);if(sc<bs){bs=sc;bst={a:aP,b:bP};}}}}
+if(!bst)continue;ms.push({t1:bst.a,t2:bst.b,diff:Math.abs(bst.a[0].score+bst.a[1].score-bst.b[0].score-bst.b[1].score)});us(bst.a,bst.b,fR,pR,lR);}
+rm(ms);rs(tA.concat(tB),tA,tB,ms);}
+function sm(aP,bP,fR,pR,tA,tB,uPA,uPB){var a1=aP[0],a2=aP[1],d1=bP[0],d2=bP[1];var f=[fR.get(gk(a1.name,d1.name))||0,fR.get(gk(a1.name,d2.name))||0,fR.get(gk(a2.name,d1.name))||0,fR.get(gk(a2.name,d2.name))||0];
+var mf=Math.max.apply(null,f),tf=f.reduce(function(a,b){return a+b;},0);var ac=pR.get(gk(a1.name,a2.name))||0,dc=pR.get(gk(d1.name,d2.name))||0;
+var sc=(a1.play+a2.play+d1.play+d2.play)*1000+mf*80000+tf*5000+Math.max(ac,dc)*30000;
+if(uPA&&ac===0)sc-=200000;if(uPB&&dc===0)sc-=200000;
+[a1,a2].forEach(function(at){var cs=tB.map(function(d){return fR.get(gk(at.name,d.name))||0;});var mn=Math.min.apply(null,cs),mx=Math.max.apply(null,cs);
+[d1,d2].forEach(function(df){var c=fR.get(gk(at.name,df.name))||0;if(c>=mx&&mx>mn)sc+=(mx-mn)*5000;if(c===mn&&mn<mx)sc-=3000;});});
+[d1,d2].forEach(function(df){var cs=tA.map(function(a){return fR.get(gk(df.name,a.name))||0;});var mn=Math.min.apply(null,cs),mx=Math.max.apply(null,cs);
+[a1,a2].forEach(function(at){var c=fR.get(gk(df.name,at.name))||0;if(c>=mx&&mx>mn)sc+=(mx-mn)*5000;if(c===mn&&mn<mx)sc-=3000;});});return sc;}
+function gm(R){var pl=pp('All');if(pl.length<4){alert('至少4人');return;}cq(pl,R*4);var fR=new Map(),pR=new Map(),lR=new Set(),ms=[];
+for(var r=0;r<R*3&&ms.length<R;r++){var uq=pl.filter(function(p){return p.play<p.maxPlay;});if(uq.length<4)break;
+var mp=Math.min.apply(null,uq.map(function(p){return p.play;}));var mt=null;
+for(var ex=1;ex<=3&&!mt;ex++){var pool=uq.filter(function(p){return p.play<=mp+ex;});
+if(ex===1){var nr=pool.filter(function(p){return!lR.has(p.name);});if(nr.length>=4)pool=nr;}
+var ns=new Set(pool.map(function(p){return p.name;}));
+for(var i=0;i<pl.length;i++)for(var j=i+1;j<pl.length;j++){if(!(pR.get(gk(pl[i].name,pl[j].name))||0)){var pi=pl[i],pj=pl[j];if(pi.play<pi.maxPlay&&pi.play<=mp+ex&&!ns.has(pi.name)){pool.push(pi);ns.add(pi.name);}if(pj.play<pj.maxPlay&&pj.play<=mp+ex&&!ns.has(pj.name)){pool.push(pj);ns.add(pj.name);}}}
+pool.sort(function(a,b){return a.play-b.play||Math.random()-.5;});
+mt=fm(pool,fR,pR,pl);
+if(!mt){var av=uq.filter(function(p){return p.play<=mp+ex;});av.sort(function(a,b){return a.play-b.play;});var fl=Math.min(av.length,10);
+for(var i2=0;i2<fl&&!mt;i2++)for(var j2=i2+1;j2<fl&&!mt;j2++)for(var k=j2+1;k<fl&&!mt;k++)for(var l=k+1;l<fl&&!mt;l++){var ps=[av[i2],av[j2],av[k],av[l]];if(ps.some(function(p){return p.play>=p.maxPlay;}))continue;var sps=[[0,1,2,3],[0,2,1,3],[0,3,1,2]];
+for(var si=0;si<3;si++){var s=sps[si],d=Math.abs(ps[s[0]].score+ps[s[1]].score-ps[s[2]].score-ps[s[3]].score);if(d<=MD){mt={pA:[ps[s[0]],ps[s[1]]],pB:[ps[s[2]],ps[s[3]]],diff:d};break;}}}}}
+if(!mt)continue;ms.push({t1:mt.pA,t2:mt.pB,diff:mt.diff});us(mt.pA,mt.pB,fR,pR,lR);}rm(ms);rs(pl,null,null,ms);}
+function fm(av,fR,pR,all){var pool=av.filter(function(p){return p.play<p.maxPlay;});if(pool.length<4)return null;pool.sort(function(a,b){return a.play-b.play||Math.random()-.5;});
+var len=Math.min(pool.length,14),bst=null,bs=1/0;
+var hUP=all.some(function(p){return all.some(function(o){return o.name!==p.name&&!(pR.get(gk(p.name,o.name))||0);});});
+var hUO=all.some(function(p){return all.some(function(o){return o.name!==p.name&&!(fR.get(gk(p.name,o.name))||0);});});
+var mnP=pool[0].play;
+for(var i=0;i<len;i++)for(var j=i+1;j<len;j++)for(var k=j+1;k<len;k++)for(var l=k+1;l<len;l++){
+var ps=[pool[i],pool[j],pool[k],pool[l]];if(ps.some(function(p){return p.play>=p.maxPlay;}))continue;
+var sps=[[[0,1],[2,3]],[[0,2],[1,3]],[[0,3],[1,2]]];
+for(var si=0;si<3;si++){var pA=[ps[sps[si][0][0]],ps[sps[si][0][1]]],pB=[ps[sps[si][1][0]],ps[sps[si][1][1]]];
+var sA=pA[0].score+pA[1].score,sB=pB[0].score+pB[1].score,diff=Math.abs(sA-sB);if(diff>MD)continue;
+var pcA=pR.get(gk(pA[0].name,pA[1].name))||0,pcB=pR.get(gk(pB[0].name,pB[1].name))||0;
+var fs=[fR.get(gk(pA[0].name,pB[0].name))||0,fR.get(gk(pA[0].name,pB[1].name))||0,fR.get(gk(pA[1].name,pB[0].name))||0,fR.get(gk(pA[1].name,pB[1].name))||0];
+var mf=Math.max.apply(null,fs),tf=fs.reduce(function(a,b){return a+b;},0),nO=fs.filter(function(f){return f===0;}).length;
+var cov=0;if(hUP){if(pcA===0)cov-=200000;if(pcB===0)cov-=200000;}if(hUO)cov-=nO*100000;
+var pp2=ps.reduce(function(s,p){return s+(p.play-mnP)*20000;},0);
+var oV=0;[0,1].forEach(function(idx){var atks=idx===0?pA:pB,defs=idx===0?pB:pA;
+atks.forEach(function(at){defs.forEach(function(df){var fc=fR.get(gk(at.name,df.name))||0;var cs=all.filter(function(t){return t.name!==at.name;}).map(function(t){return fR.get(gk(at.name,t.name))||0;});var mn=Math.min.apply(null,cs),mx=Math.max.apply(null,cs);if(fc>=mx&&mx>mn)oV+=(mx-mn)*5000;if(fc===mn&&mn<mx)oV-=3000;});});});
+var sc=pp2+cov+mf*80000+Math.max(pcA,pcB)*30000+tf*5000+(pcA+pcB)*1000+oV+diff;
+if(sc<bs){bs=sc;bst={pA:pA,pB:pB,diff:diff};}}}return bst;}
+function us(aP,bP,fR,pR,lR){var a1=aP[0],a2=aP[1],b1=bP[0],b2=bP[1];a1.partners.add(a2.name);a2.partners.add(a1.name);b1.partners.add(b2.name);b2.partners.add(b1.name);
+var ak=gk(a1.name,a2.name);pR.set(ak,(pR.get(ak)||0)+1);var bk=gk(b1.name,b2.name);pR.set(bk,(pR.get(bk)||0)+1);
+a1.opponents.add(b1.name);a1.opponents.add(b2.name);a2.opponents.add(b1.name);a2.opponents.add(b2.name);b1.opponents.add(a1.name);b1.opponents.add(a2.name);b2.opponents.add(a1.name);b2.opponents.add(a2.name);
+a1.play++;a2.play++;b1.play++;b2.play++;
+[gk(a1.name,b1.name),gk(a1.name,b2.name),gk(a2.name,b1.name),gk(a2.name,b2.name)].forEach(function(k){fR.set(k,(fR.get(k)||0)+1);});
+lR.clear();[a1,a2,b1,b2].forEach(function(p){lR.add(p.name);});}
+function rm(ms){var h='';ms.forEach(function(m,i){var dc=m.diff===0?'d0':m.diff===1?'d1':m.diff<=2?'d2':'dx';
+h+='<div class="mc"><div class="mh"><span class="rl">第'+(i+1)+'场</span><span class="db '+dc+'">差'+m.diff+'</span></div><div class="tr">'+m.t1[0].name+'(#'+m.t1[0].score+') & '+m.t1[1].name+'(#'+m.t1[1].score+') [总'+(m.t1[0].score+m.t1[1].score)+']</div><div class="vs">VS</div><div class="tr">'+m.t2[0].name+'(#'+m.t2[0].score+') & '+m.t2[1].name+'(#'+m.t2[1].score+') [总'+(m.t2[0].score+m.t2[1].score)+']</div></div>';});
+document.getElementById('mr').innerHTML=h;}
+function rs(players,tA,tB,ms){if(!ms.length){document.getElementById('st').innerHTML='';return;}
+var ap=new Map(),pm=new Map(),om=new Map();players.forEach(function(p){ap.set(p.name,0);pm.set(p.name,new Map());om.set(p.name,new Map());});
+ms.forEach(function(m){[m.t1[0],m.t1[1],m.t2[0],m.t2[1]].forEach(function(p){ap.set(p.name,(ap.get(p.name)||0)+1);});
+function aP(a,b){var mp2=pm.get(a);if(mp2)mp2.set(b,(mp2.get(b)||0)+1);}aP(m.t1[0].name,m.t1[1].name);aP(m.t1[1].name,m.t1[0].name);aP(m.t2[0].name,m.t2[1].name);aP(m.t2[1].name,m.t2[0].name);
+function aO(a,b){var mp2=om.get(a);if(mp2)mp2.set(b,(mp2.get(b)||0)+1);}m.t1.forEach(function(a){m.t2.forEach(function(b){aO(a.name,b.name);aO(b.name,a.name);});});});
+var iT=M==='team';var h='<div class="ss"><b>📊 统计报表</b><table><tr>';if(iT)h+='<th>队伍</th>';h+='<th>姓名</th><th>排名</th><th>出场</th><th>搭档</th><th>搭档详情</th><th>对手</th><th>对手详情</th></tr>';
+players.forEach(function(p){var isA=tA&&tA.some(function(t){return t.name===p.name;});var pc=pm.get(p.name)?pm.get(p.name).size:0;var tp2=iT?((isA?tA.length:tB.length)-1):(players.length-1);
+var oc=om.get(p.name)?om.get(p.name).size:0;var to=iT?(isA?tB.length:tA.length):(players.length-1);
+var ps2='',os='';var pmp=pm.get(p.name);if(pmp)pmp.forEach(function(v,k){ps2+=(ps2?', ':'')+k+'\xd7'+v;});
+var omp=om.get(p.name);if(omp)omp.forEach(function(v,k){os+=(os?', ':'')+k+'\xd7'+v;});
+h+='<tr>';if(iT)h+='<td>'+(isA?'A队':'B队')+'</td>';h+='<td><b>'+p.name+'</b></td><td>#'+p.score+'</td><td>'+(ap.get(p.name)||0)+'</td><td>'+pc+'/'+tp2+'</td><td class="dt">'+ps2+'</td><td>'+oc+'/'+to+'</td><td class="dt">'+os+'</td></tr>';});
+h+='</table></div>';document.getElementById('st').innerHTML=h;}
+window.onload=function(){is('sA',10);is('sB',10);is('sAll',10);ur();};
+</script></body></html>
